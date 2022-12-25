@@ -11,6 +11,10 @@ const Bootcamp = require("./models/Bootcamp");
 
 // Load Course Model
 const Course = require("./models/Course");
+
+// Load User Model
+const User = require("./models/User");
+
 const connectDB = require("./config/db");
 
 // connect to DB
@@ -26,7 +30,11 @@ const courses = JSON.parse(
   fs.readFileSync(`${__dirname}/_data/courses.json`, `utf-8`)
 );
 
-// console.log(courses);
+// Reading the Model JSON File
+const users = JSON.parse(
+  fs.readFileSync(`${__dirname}/_data/users.json`, `utf-8`)
+);
+
 // Import into DB
 const importData = async () => {
   try {
@@ -44,6 +52,17 @@ const importCourses = async () => {
   try {
     await Course.create(courses);
     console.log("Courses Imported...".green.inverse);
+    process.exit();
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+// Import Users into DB
+const importUsers = async () => {
+  try {
+    await User.create(users);
+    console.log("Users Imported...".green.inverse);
     process.exit();
   } catch (error) {
     console.log(error);
@@ -75,6 +94,19 @@ const deleteCourses = async () => {
   }
 };
 
+// Delete User from DB
+const deleteUsers = async () => {
+  try {
+    // await connectDB();
+    await User.deleteMany();
+
+    console.log("Courses Deleted...".red.inverse);
+    process.exit();
+  } catch (Err) {
+    console.log(Err);
+  }
+};
+
 try {
   if (process.argv[2] === "-ib") {
     importData();
@@ -84,6 +116,10 @@ try {
     deleteCourses();
   } else if (process.argv[2] === "-ic") {
     importCourses();
+  } else if (process.argv[2] === "-iu") {
+    importUsers();
+  } else if (process.argv[2] === "-du") {
+    deleteUsers();
   } else {
     console.log("Erroneous Entry");
   }

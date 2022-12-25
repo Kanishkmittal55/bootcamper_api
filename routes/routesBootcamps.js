@@ -18,7 +18,7 @@ const courseRouter = require("./courses");
 
 const router = expressRouterInstance.Router();
 
-const { protect } = require("../middlewares/auth"); // We get the protect function directly
+const { protect, authorize } = require("../middlewares/auth"); // We get the protect function directly
 
 // Re-route into other resource routers
 router.use("/:bootcampId/courses", courseRouter);
@@ -30,11 +30,13 @@ router
   .get(advancedResults(Bootcamp1, "courses"), getAllBootCamps)
   .post(protect, createBootCamp); // where we put protect in the protected there the user has to be logged in
 
-router.route("/:id/photo").put(protect, bootcampPhotoUpload); // where we put protect in the protected there the user has to be logged in
+router
+  .route("/:id/photo")
+  .put(protect, authorize("publisher", "admin"), bootcampPhotoUpload); // where we put protect in the protected there the user has to be logged in
 
 router
   .route("/:id")
   .get(getBootCamp)
-  .put(protect, updateBootCamp)
-  .delete(protect, deleteBootCamp); // where we put protect in the protected there the user has to be logged in
+  .put(protect, authorize("publisher", "admin"), updateBootCamp)
+  .delete(protect, authorize("publisher", "admin"), deleteBootCamp); // where we put protect in the protected there the user has to be logged in
 module.exports = router;
