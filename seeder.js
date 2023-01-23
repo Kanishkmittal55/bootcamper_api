@@ -15,6 +15,9 @@ const Course = require("./models/Course");
 // Load User Model
 const User = require("./models/User");
 
+// Load Review Model
+const Review = require("./models/Review");
+
 const connectDB = require("./config/db");
 
 // connect to DB
@@ -35,10 +38,16 @@ const users = JSON.parse(
   fs.readFileSync(`${__dirname}/_data/users.json`, `utf-8`)
 );
 
+// Reading the Review JSON File
+const reviews = JSON.parse(
+  fs.readFileSync(`${__dirname}/_data/reviews.json`, `utf-8`)
+);
+
 // Import into DB
 const importData = async () => {
   try {
     await Bootcamp.create(bootcamps);
+    await Review.create(reviews);
     // await Course.create(courses);
     console.log("Data Imported...".green.inverse);
     process.exit();
@@ -75,7 +84,7 @@ const deleteData = async () => {
   try {
     await connectDB();
     await Bootcamp.deleteMany(); // If you dont pass anything to delete Many it will delete everything.
-
+    await Review.deleteMany();
     console.log("Data Destroyed...".red.inverse);
     process.exit();
   } catch (error) {}
@@ -100,7 +109,7 @@ const deleteUsers = async () => {
     // await connectDB();
     await User.deleteMany();
 
-    console.log("Courses Deleted...".red.inverse);
+    console.log("Users Deleted...".red.inverse);
     process.exit();
   } catch (Err) {
     console.log(Err);
