@@ -8,6 +8,7 @@ const connectDB = require("./config/db");
 const errorHandler = require("./middlewares/error");
 const color = require("colors");
 const path = require("path");
+const cors = require("cors");
 
 // Load env vars
 dotenv.config({ path: "./config/config.env" });
@@ -26,6 +27,9 @@ const app = expressServer();
 
 // Body parser
 app.use(expressServer.json());
+
+// cors to allow access from same website and allowing data to flow
+app.use(cors());
 
 //Cookie parser
 app.use(cookieParser());
